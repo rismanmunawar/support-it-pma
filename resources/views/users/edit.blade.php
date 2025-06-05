@@ -1,9 +1,6 @@
-@extends('layouts.app')
-
-@section('content')
-    <div class="container mx-auto px-4 py-6">
-        <h1 class="text-xl font-bold mb-4">Edit User</h1>
-
+<x-app-layout>
+    <div class="w-full px-4 py-6">
+        <h1 class="text-xl font-bold mb-4 text-gray-900 dark:text-gray-100">Edit User</h1>
         <form action="{{ route('users.update', $user->id) }}" method="POST" class="bg-white p-6 rounded shadow-md space-y-4">
             @csrf @method('PUT')
             <div>
@@ -26,4 +23,4 @@
             </div>
         </form>
     </div>
-@endsection
+</x-app-layout>
