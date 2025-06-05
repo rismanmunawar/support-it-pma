@@ -9,10 +9,44 @@ use Illuminate\Validation\Rules;
 
 class UserController extends Controller
 {
-    public function index()
+    // public function index()
+    // {
+    //     $users = User::all();
+    //     return view('users.index', compact('users'));
+    // }
+    public function index(Request $request)
     {
-        $users = User::all();
+        $search = $request->input('search');
+
+        $users = User::query()
+            ->when($search, function ($query, $search) {
+                return $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('kode_depo', 'like', "%{$search}%");
+            })
+            ->orderBy('name')
+            ->paginate(10);
+
         return view('users.index', compact('users'));
+    }
+    // Filter search auto di tabel
+    public function search(Request $request)
+    {
+        $query = $request->query('query');
+        $filter = $request->query('filter', 'name');
+
+        $allowedFilters = ['name', 'email', 'kode_depo'];
+        if (!in_array($filter, $allowedFilters)) {
+            return response()->json([], 400);
+        }
+
+        $users = User::where($filter, 'LIKE', "%{$query}%")
+            ->select('id', 'name', 'email', 'kode_depo')
+            ->orderBy($filter)
+            ->limit(50)
+            ->get();
+
+        return response()->json($users);
     }
 
     public function create()
@@ -43,6 +77,12 @@ class UserController extends Controller
     {
         return view('users.edit', compact('user'));
     }
+
+    //     public function edit($id)
+    // {
+    //     $user = User::findOrFail($id);
+    //     return view('users.edit', compact('user'));
+    // }
 
     public function update(Request $request, User $user)
     {

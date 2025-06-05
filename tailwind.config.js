@@ -1,21 +1,33 @@
 import defaultTheme from 'tailwindcss/defaultTheme';
-import forms from '@tailwindcss/forms';
+import forms from '@tailwindcss/forms'
 
-/** @type {import('tailwindcss').Config} */
 export default {
-    content: [
-        './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
-        './storage/framework/views/*.php',
-        './resources/views/**/*.blade.php',
-    ],
-
-    theme: {
-        extend: {
-            fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
-            },
+  darkMode: 'class',
+  content: [
+    './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
+    './storage/framework/views/*.php',
+    './resources/views/**/*.blade.php',
+  ],
+  theme: {
+    extend: {
+      colors: {
+        sidebar: {
+          light: '#ffffff', // warna sidebar saat light
+          dark: '#1f2937',   // warna sidebar saat dark (misalnya gray-800)
         },
+        menubg: {
+          light: '#f9fafb', // hover bg di light
+          dark: '#374151', // hover bg di dark
+        },
+        menutext: {
+          light: '#1f2937',
+          dark: '#d1d5db',
+        },
+      },
+      fontFamily: {
+        sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+      },
     },
-
-    plugins: [forms],
-};
+  },
+  plugins: [forms],
+}
