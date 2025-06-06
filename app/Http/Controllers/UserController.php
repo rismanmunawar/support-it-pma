@@ -22,7 +22,9 @@ class UserController extends Controller
             ->when($search, function ($query, $search) {
                 return $query->where('name', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%")
-                    ->orWhere('kode_depo', 'like', "%{$search}%");
+                    ->orWhere('branch', 'like', "%{$search}%")
+                    ->orWhere('nik', 'like', "%{$search}%")
+                    ->orWhere('role', 'like', "%{$search}%");
             })
             ->orderBy('name')
             ->paginate(10);
@@ -30,24 +32,39 @@ class UserController extends Controller
         return view('users.index', compact('users'));
     }
     // Filter search auto di tabel
+    // public function search(Request $request)
+    // {
+    //     $query = $request->query('query');
+    //     $filter = $request->query('filter', 'name');
+
+    //     $allowedFilters = ['name', 'email', 'branch', 'nik', 'role'];
+    //     if (!in_array($filter, $allowedFilters)) {
+    //         return response()->json([], 400);
+    //     }
+
+    //     $users = User::where($filter, 'LIKE', "%{$query}%")
+    //         ->select('id', 'nik', 'name', 'email', 'role', 'branch')
+    //         ->orderBy($filter)
+    //         ->limit(50)
+    //         ->get();
+
+    //     return response()->json($users);
+    // }
     public function search(Request $request)
     {
         $query = $request->query('query');
-        $filter = $request->query('filter', 'name');
+        $filter = $request->query('filter');
 
-        $allowedFilters = ['name', 'email', 'kode_depo'];
-        if (!in_array($filter, $allowedFilters)) {
-            return response()->json([], 400);
-        }
-
-        $users = User::where($filter, 'LIKE', "%{$query}%")
-            ->select('id', 'name', 'email', 'kode_depo')
-            ->orderBy($filter)
-            ->limit(50)
+        $users = User::query()
+            ->when($filter && $query, function ($q) use ($filter, $query) {
+                $q->where($filter, 'like', "%{$query}%");
+            })
+            ->select('id', 'nik', 'name', 'role', 'role_desc', 'branch', 'email', 'phone') // ⬅ PASTIKAN SEMUA KOLOM DIBUTUHKAN
             ->get();
 
         return response()->json($users);
     }
+
 
     public function create()
     {
@@ -57,21 +74,30 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'nik' => 'required|string|max:20|unique:users',
             'name' => 'required|string|max:255',
-            'email' => 'required|email|ends_with:@pma.co.id|unique:users',
-            'kode_depo' => 'required|string|max:255',
+            'email' => 'required|email|ends_with:@pinusmerahabadi.co.id|unique:users',
+            'branch' => 'required|string|max:255',
+            'role' => 'required|string|max:50',
+            'role_desc' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:20',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         User::create([
+            'nik' => $request->nik,
             'name' => $request->name,
             'email' => $request->email,
-            'kode_depo' => $request->kode_depo,
+            'role' => $request->role,
+            'role_desc' => $request->role_desc,
+            'phone' => $request->phone,
+            'branch' => $request->branch,
             'password' => Hash::make($request->password),
         ]);
 
         return redirect()->route('users.index')->with('success', 'User berhasil ditambahkan.');
     }
+
 
     public function edit(User $user)
     {
@@ -87,14 +113,18 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $request->validate([
+            'nik' => "string|max:20|unique:users,nik,{$user->id}",
             'name' => 'required|string|max:255',
-            'email' => "required|email|ends_with:@pma.co.id|unique:users,email,$user->id",
-            'kode_depo' => 'required|string|max:255',
+            'email' => "required|email|ends_with:@pinusmerahabadi.co.id|unique:users,email,$user->id",
+            'branch' => 'required|string|max:255',
+            'role' => 'string|max:50',
+            'role_desc' => 'string|max:255',
+            'phone' => 'string|max:20',
         ]);
 
-        $user->update($request->only('name', 'email', 'kode_depo'));
+        $user->update($request->only('nik', 'name', 'email', 'branch', 'role', 'role_desc', 'phone'));
 
-        return redirect()->route('users.index')->with('success', 'User berhasil diperbarui.');
+        return redirect()->route('users.index')->with('success', 'Data user berhasil diperbarui.');
     }
 
     public function destroy(User $user)

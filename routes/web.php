@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FaqCOntroller;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -26,6 +27,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
     Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+
+    Route::get('/faq', [FaqCOntroller::class, 'index'])->name('faq');
 });
 
 // Route::middleware(['auth', 'admin'])->group(function () {

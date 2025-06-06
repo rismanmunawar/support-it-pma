@@ -18,7 +18,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('kode_depo')->after('email');
+            $table->string('branch')->after('email');
         });
     }
 
@@ -29,7 +29,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('kode_depo');
+            // $table->dropColumn('branch');
         });
     }
 };

@@ -1,10 +1,10 @@
 <x-guest-layout>
     <form method="POST" action="{{ route('register') }}">
         @csrf
-        {{-- Kode Depo --}}
+        {{-- branch --}}
         <div>
-            <x-input-label for="kode_depo">Kode Depo</x-input-label>
-            <x-text-input id="kode_depo" type="text" name="kode_depo" required class="mt-1 block w-full" />
+            <x-input-label for="branch">Branch</x-input-label>
+            <x-text-input id="branch" type="text" name="branch" required class="mt-1 block w-full" />
         </div>
 
         <!-- Name -->

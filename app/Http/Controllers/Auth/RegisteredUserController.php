@@ -52,16 +52,21 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'ends_with:@pma.co.id', 'unique:users'],
-            'kode_depo' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'ends_with:@pinusmerahabadi.co.id', 'unique:users'],
+            'branch' => ['required', 'string', 'max:255'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'kode_depo' => $request->kode_depo,
+            'branch' => $request->branch,
             'password' => Hash::make($request->password),
+            // Kolom opsional atau default
+            'role' => 'user',
+            'nik' => null,
+            'role_desc' => null,
+            'phone' => null,
         ]);
 
         event(new Registered($user));
