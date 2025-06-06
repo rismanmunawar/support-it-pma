@@ -29,7 +29,8 @@
     </div>
 
     <!-- Menu -->
-    <div class="flex-1 overflow-y-auto px-2 py-4 space-y-1">
+    <!-- <div class="flex-1 overflow-y-auto px-2 py-4 space-y-1"> -->
+    <div class="flex-1 px-2 py-4 space-y-1 min-h-screen md:max-h-screen overflow-y-auto">
 
         <!-- Dashboard -->
         <a href="{{ route('dashboard') }}"
@@ -43,6 +44,18 @@
                 <path d="M3 12l2-2m0 0l7-7 7 7M13 5v6h6" />
             </svg>
             Dashboard
+        </a>
+        <a href="{{ route('main') }}"
+            class="group flex items-center px-2 py-2 text-sm font-medium rounded-md
+                {{ request()->routeIs('main') 
+                    ? 'bg-active-light text-gray-900 dark:bg-active-dark dark:text-white font-semibold'
+                    : 'text-gray-700 dark:text-gray-300 hover:bg-menubg-light dark:hover:bg-menubg-dark' }}">
+            <svg class="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-300"
+                fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 12l2-2m0 0l7-7 7 7M13 5v6h6" />
+            </svg>
+            Main Menu
         </a>
         <!-- Menu Multilevel -->
         <div>

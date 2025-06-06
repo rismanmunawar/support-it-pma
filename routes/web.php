@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\FaqCOntroller;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +30,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
     Route::get('/faq', [FaqCOntroller::class, 'index'])->name('faq');
+    // Route::get('/faq', [FaqController::class, 'index']);
+    Route::get('/main', [FaqCOntroller::class, 'main'])->name('main');
 });
 
 // Route::middleware(['auth', 'admin'])->group(function () {

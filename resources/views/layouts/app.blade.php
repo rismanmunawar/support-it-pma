@@ -28,42 +28,40 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
 </head>
 
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
         <!-- Page Heading -->
-
         @include('layouts.navigation')
-
-        <!-- Page Content -->
-        {{-- <main>
-            {{ $slot }}
-        </main> --}}
     </div>
-</body>
-<!-- SweetAlert2 CDN -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-@if (session('success'))
-<script>
-    Swal.fire({
-        icon: 'success',
-        title: 'Berhasil!',
-        text: "{{ session('success') }}",
-        confirmButtonColor: '#16a34a', // Tailwind green-600
-    });
-</script>
-@endif
 
-@if (session('error'))
-<script>
-    Swal.fire({
-        icon: 'error',
-        title: 'Oops!',
-        text: "{{ session('error') }}",
-        confirmButtonColor: '#dc2626', // Tailwind red-600
-    });
-</script>
-@endif
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @if (session('success'))
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: "{{ session('success') }}",
+            confirmButtonColor: '#16a34a', // Tailwind green-600
+        });
+    </script>
+    @endif
+
+    @if (session('error'))
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops!',
+            text: "{{ session('error') }}",
+            confirmButtonColor: '#dc2626', // Tailwind red-600
+        });
+    </script>
+    @endif
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    @stack('scripts')
+</body>
 
 </html>
