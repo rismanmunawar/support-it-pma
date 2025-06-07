@@ -5,6 +5,7 @@ use App\Http\Controllers\FaqCOntroller;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PengumumanController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,6 +33,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/faq', [FaqCOntroller::class, 'index'])->name('faq');
     // Route::get('/faq', [FaqController::class, 'index']);
     Route::get('/main', [FaqCOntroller::class, 'main'])->name('main');
+
+    Route::resource('pengumuman', PengumumanController::class);
 });
 
 // Route::middleware(['auth', 'admin'])->group(function () {
