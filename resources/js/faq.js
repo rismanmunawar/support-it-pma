@@ -11,6 +11,7 @@ export function faqPage(data) {
             this.openCategory = this.openCategory === index ? null : index;
             // Reset subitem agar tidak terbuka otomatis
             this.openSubitem = null;
+            // this.selectedContent = '<p>Silakan pilih topik dari menu di kiri.</p>';
         },
 
         toggleSubitem(categoryIndex, itemIndex) {
@@ -25,6 +26,7 @@ export function faqPage(data) {
             if (item.subitems && item.subitems.length > 0) {
                 // Toggle subitem jika punya
                 this.toggleSubitem(categoryIndex, itemIndex);
+                // this.selectedContent = '<p>Silakan pilih subtopik dari menu di kiri.</p>';
             } else {
                 // Tampilkan konten langsung jika tidak ada subitems
                 this.selectedContent = item.content || '<p>Tidak ada konten.</p>';

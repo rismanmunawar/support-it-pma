@@ -197,7 +197,5 @@
 
             FAQ & Docs
         </a>
-
-
     </div>
 </nav>
