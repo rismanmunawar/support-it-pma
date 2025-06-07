@@ -1,53 +1,103 @@
 <x-app-layout>
-    <div x-data="faqPage(@js($categories))" class="px-4 py-6 flex-1 flex flex-col no-scrollbar relative">
-        <div class="flex justify-between items-center mb-4">
-            <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">FAQ & Docs</h1>
+    <div class="w-full px-4 py-6">
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800 dark:text-white mb-2">📢 Portal Informasi & Pengumuman</h1>
+                <p class="text-gray-600 dark:text-gray-400">Selalu terhubung dengan update terkini dari tim & sistem.</p>
+            </div>
         </div>
 
-        <div class="flex space-x-4 flex-1">
-            <!-- Sidebar -->
-            <div x-ref="sidebarScroll"
-                class="w-2/6 bg-white dark:bg-gray-800 p-4 rounded shadow max-h-screen overflow-y-auto no-scrollbar">
-                <template x-for="(category, index) in categories" :key="index">
-                    <div class="mb-4">
-                        <button @click="toggleCategory(index)"
-                            class="w-full text-left font-semibold text-gray-800 dark:text-white hover:underline mb-2">
-                            <span x-text="category.name"></span>
-                        </button>
-                        <div x-show="openCategory === index" x-transition>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <template x-for="(item, i) in category.items" :key="i">
-                                    <div @click="selectedContent = item.content"
-                                        class="cursor-pointer bg-gray-100 dark:bg-gray-700 rounded-lg shadow p-4 hover:bg-gray-200 dark:hover:bg-gray-600 transition">
-                                        <img :src="item.image || '{{ asset('images/sample/Group 404.png') }}'" alt=""
-                                            class="w-full h-32 object-cover rounded mb-2">
-                                        <h3 class="text-sm font-semibold text-gray-800 dark:text-white" x-text="item.title"></h3>
-                                    </div>
-                                </template>
-                            </div>
-                        </div>
-                    </div>
-                </template>
+        <!-- Filter & Search -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+            <!-- Kategori Filter -->
+            <div class="flex flex-wrap gap-2">
+                <button class="px-4 py-2 rounded-full text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">Semua</button>
+                <button class="px-4 py-2 rounded-full text-sm font-medium text-gray-700 bg-gray-200 dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600">Sistem</button>
+                <button class="px-4 py-2 rounded-full text-sm font-medium text-gray-700 bg-gray-200 dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600">Kegiatan</button>
+                <button class="px-4 py-2 rounded-full text-sm font-medium text-gray-700 bg-gray-200 dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600">Umum</button>
             </div>
 
-            <!-- Main content -->
-            <div x-ref="contentScroll" @scroll="checkScroll()"
-                class="w-4/6 bg-white dark:bg-gray-800 p-6 rounded shadow max-h-screen overflow-y-auto text-gray-900 dark:text-gray-100 no-scrollbar relative">
-                <div x-html="selectedContent"></div>
+            <!-- Search -->
+            <div class="relative w-full md:w-1/3">
+                <input
+                    type="text"
+                    placeholder="Cari pengumuman..."
+                    class="w-full pl-10 pr-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <svg class="absolute left-3 top-2.5 w-5 h-5 text-gray-500 dark:text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M21 21l-4.35-4.35M16 10a6 6 0 11-12 0 6 6 0 0112 0z" />
+                </svg>
+            </div>
+        </div>
 
-                <!-- Scroll to top button -->
-                <button
-                    x-show="showScrollTopButton"
-                    @click="scrollToTop()"
-                    class="fixed bottom-6 right-6 bg-blue-600 bg-opacity-70 hover:bg-opacity-100 text-white p-3 rounded-full shadow-lg transition-opacity"
-                    style="display: none;"
-                    aria-label="Scroll to top">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
-                    </svg>
-                </button>
+        <!-- News Feed Style -->
+        <div class="space-y-4">
+            <!-- Item -->
+            <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 hover:shadow-md transition-shadow duration-300">
+                <div class="flex items-start gap-3">
+                    <div class="flex-shrink-0">
+                        <div class="bg-blue-100 dark:bg-blue-900 p-2 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600 dark:text-blue-300" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M18.364 5.636a9 9 0 11-12.728 0m1.414 1.414a7 7 0 109.9 0M15 12h.01M9 12h.01M12 15h.01" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h2 class="text-lg font-semibold text-gray-800 dark:text-white">📢 Libur Nasional 17 Agustus</h2>
+                        <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                            Dalam rangka Hari Kemerdekaan RI, seluruh aktivitas operasional akan diliburkan pada tanggal 17 Agustus 2025.
+                        </p>
+                        <p class="text-xs text-gray-400 dark:text-gray-500 mt-2">Kategori: Umum · 6 Juni 2025</p>
+                    </div>
+                </div>
+            </div>
 
+            <!-- Item -->
+            <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 hover:shadow-md transition-shadow duration-300">
+                <div class="flex items-start gap-3">
+                    <div class="flex-shrink-0">
+                        <div class="bg-green-100 dark:bg-green-900 p-2 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600 dark:text-green-300" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9 17v-6a3 3 0 013-3h5m0 0V4m0 4l-8 8" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h2 class="text-lg font-semibold text-gray-800 dark:text-white">🛡️ Update Keamanan Sistem</h2>
+                        <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                            Update keamanan telah diterapkan. Pastikan logout & login kembali untuk menghindari konflik data cache.
+                        </p>
+                        <p class="text-xs text-gray-400 dark:text-gray-500 mt-2">Kategori: Sistem · 3 Juni 2025</p>
+                    </div>
+                </div>
+            </div>
 
+            <!-- Item -->
+            <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 hover:shadow-md transition-shadow duration-300">
+                <div class="flex items-start gap-3">
+                    <div class="flex-shrink-0">
+                        <div class="bg-yellow-100 dark:bg-yellow-900 p-2 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600 dark:text-yellow-300" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h2 class="text-lg font-semibold text-gray-800 dark:text-white">🎉 Event Bulanan: Sharing & Games</h2>
+                        <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                            Bergabunglah dalam event internal bulan ini! Tersedia sesi ilmu dan hiburan seru. Cek email untuk jadwal!
+                        </p>
+                        <p class="text-xs text-gray-400 dark:text-gray-500 mt-2">Kategori: Kegiatan · 1 Juni 2025</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

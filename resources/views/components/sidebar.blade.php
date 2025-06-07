@@ -170,15 +170,21 @@
         <!-- FAQ & Documentation -->
         <a href="{{ route('faq') }}"
             class="group flex items-center px-2 py-2 text-sm font-medium rounded-md
-                {{ request()->routeIs('faq') 
-                    ? 'bg-active-light text-gray-900 dark:bg-active-dark dark:text-white font-semibold'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-menubg-light dark:hover:bg-menubg-dark' }}">
-            <svg class="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-300"
-                fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 12l2-2m0 0l7-7 7 7M13 5v6h6" />
+        {{ request()->routeIs('faq') 
+            ? 'bg-active-light text-gray-900 dark:bg-active-dark dark:text-white font-semibold'
+            : 'text-gray-700 dark:text-gray-300 hover:bg-menubg-light dark:hover:bg-menubg-dark' }}">
+
+            <!-- Question Mark Circle Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg"
+                class="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-600 dark:text-gray-500 dark:group-hover:text-gray-300"
+                fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M8.227 9a3.001 3.001 0 115.546 2.042c-.572.884-1.226 1.241-1.773 1.648-.527.393-.846.93-.846 1.56M12 17h.01M12 3a9 9 0 100 18 9 9 0 000-18z" />
             </svg>
+
             FAQ & Docs
         </a>
+
+
     </div>
 </nav>
