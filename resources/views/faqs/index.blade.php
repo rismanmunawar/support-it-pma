@@ -1,7 +1,7 @@
 <x-app-layout>
     <div x-data="faqPage(@js($categories))" class="px-4 py-6 flex-1 flex flex-col no-scrollbar relative">
         <div class="flex justify-between items-center mb-4">
-            <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">FAQ & Docs Main</h1>
+            <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">FAQ & Docs</h1>
         </div>
 
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow max-h-screen overflow-hidden flex flex-1">

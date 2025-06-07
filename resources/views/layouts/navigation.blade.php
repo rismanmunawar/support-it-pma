@@ -45,26 +45,20 @@
                         <span class="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white bg-red-600 rounded-full">3</span>
                     </button>
                 </div>
+                <!-- Tombol Toggle Dark Mode -->
                 <button onclick="toggleDarkMode()" class="p-2 rounded text-black dark:text-white">
                     <span id="mode-icon">
-                        <svg id="sun-icon" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: none;">
-                            <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2" fill="currentColor" />
-                            <g stroke="currentColor" stroke-width="2">
-                                <line x1="12" y1="1" x2="12" y2="3" />
-                                <line x1="12" y1="21" x2="12" y2="23" />
-                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                                <line x1="1" y1="12" x2="3" y2="12" />
-                                <line x1="21" y1="12" x2="23" y2="12" />
-                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-                            </g>
+                        <svg id="sun-icon" class="h-6 w-6" style="display: none;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 3v1m0 16v1m8.66-13.66l-.707.707M4.05 19.95l-.707-.707M21 12h1M2 12H1m16.95 4.95l-.707.707M4.05 4.05l-.707.707M12 5a7 7 0 100 14 7 7 0 000-14z" />
                         </svg>
-                        <svg id="moon-icon" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: none;">
-                            <path stroke="currentColor" stroke-width="2" fill="currentColor" d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z" />
+                        <svg id="moon-icon" class="h-6 w-6" style="display: none;" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
                         </svg>
                     </span>
                 </button>
+
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button
@@ -104,32 +98,40 @@
 </div>
 
 <script>
-    // Cek preferensi awal dari localStorage atau OS
     document.addEventListener('DOMContentLoaded', () => {
+        const html = document.documentElement;
+        const sunIcon = document.getElementById('sun-icon');
+        const moonIcon = document.getElementById('moon-icon');
+
         if (
             localStorage.theme === 'dark' ||
             (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
         ) {
-            document.documentElement.classList.add('dark');
-            document.getElementById('mode-icon').textContent = '🌙';
+            html.classList.add('dark');
+            sunIcon.style.display = 'none';
+            moonIcon.style.display = 'block';
         } else {
-            document.documentElement.classList.remove('dark');
-            document.getElementById('mode-icon').textContent = '🌞';
+            html.classList.remove('dark');
+            sunIcon.style.display = 'block';
+            moonIcon.style.display = 'none';
         }
     });
 
     function toggleDarkMode() {
         const html = document.documentElement;
-        const icon = document.getElementById('mode-icon');
+        const sunIcon = document.getElementById('sun-icon');
+        const moonIcon = document.getElementById('moon-icon');
 
         if (html.classList.contains('dark')) {
             html.classList.remove('dark');
             localStorage.theme = 'light';
-            icon.textContent = '🌞';
+            sunIcon.style.display = 'block';
+            moonIcon.style.display = 'none';
         } else {
             html.classList.add('dark');
             localStorage.theme = 'dark';
-            icon.textContent = '🌙';
+            sunIcon.style.display = 'none';
+            moonIcon.style.display = 'block';
         }
     }
 </script>

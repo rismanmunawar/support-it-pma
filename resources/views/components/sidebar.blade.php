@@ -18,7 +18,7 @@
         if (path.includes('/users')) this.openMenu = 'auth';
         if (path.includes('/menu-multilevel')) this.openMenu = 'multi';
     }
-}" x-init="init()"
+}" x-init="init()" data-turbolinks-permanent
     class="w-56 h-screen bg-sidebar-light dark:bg-sidebar-dark border-r border-gray-200 dark:border-gray-700 flex flex-col">
 
     <!-- Logo -->
@@ -45,7 +45,7 @@
             </svg>
             Dashboard
         </a>
-        <a href="{{ route('main') }}"
+        <!-- <a href="{{ route('main') }}"
             class="group flex items-center px-2 py-2 text-sm font-medium rounded-md
                 {{ request()->routeIs('main') 
                     ? 'bg-active-light text-gray-900 dark:bg-active-dark dark:text-white font-semibold'
@@ -56,20 +56,19 @@
                 <path d="M3 12l2-2m0 0l7-7 7 7M13 5v6h6" />
             </svg>
             Main Menu
-        </a>
+        </a> -->
         <a href="{{ route('pengumuman.index') }}"
-
             class="group flex items-center px-2 py-2 text-sm font-medium rounded-md
-                {{ request()->routeIs('pengumuman') 
-                    ? 'bg-active-light text-gray-900 dark:bg-active-dark dark:text-white font-semibold'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-menubg-light dark:hover:bg-menubg-dark' }}">
-            <svg class="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-300"
-                fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 12l2-2m0 0l7-7 7 7M13 5v6h6" />
+        {{ request()->is('pengumuman*')
+            ? 'bg-active-light text-gray-900 dark:bg-active-dark dark:text-white font-semibold'
+            : 'text-gray-700 dark:text-gray-300 hover:bg-menubg-light dark:hover:bg-menubg-dark' }}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-300"
+                fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
             </svg>
             Pengumuman
         </a>
+
         <!-- Menu Multilevel -->
         <div>
             <button @click="toggleMainMenu('multi')"
@@ -95,19 +94,28 @@
             </button>
 
             <!-- Submenus -->
-            <div x-show="isMainMenuOpen('multi')" x-collapse class="pl-9 mt-1 space-y-1">
+            <div
+                x-show="isMainMenuOpen('multi') || '{{ 
+        request()->is('menu-multilevel*') || 
+        request()->is('submenu1_1') || 
+        request()->is('submenu2*') ? 'true' : 'false' 
+    }}' === 'true'"
+                x-collapse class="pl-9 mt-1 space-y-1">
 
                 <!-- Submenu 1 -->
-                <a href="#"
-                    class="block px-2 py-2 text-sm rounded-md text-gray-700 dark:text-gray-300 hover:bg-menubg-light dark:hover:bg-menubg-dark">
-                    Submenu 1
+                <a href="{{ url('/submenu1_1') }}"
+                    class="block px-2 py-2 text-sm rounded-md
+        {{ request()->is('submenu1_1') 
+            ? 'bg-active-light text-gray-900 dark:bg-active-dark dark:text-white font-semibold'
+            : 'text-gray-700 dark:text-gray-300 hover:bg-menubg-light dark:hover:bg-menubg-dark' }}">
+                    Submenu 1-1
                 </a>
 
                 <!-- Submenu 2 (with children) -->
                 <div>
                     <button @click="toggleSubMenu('multi.sub2')"
                         class="w-full flex items-center justify-between px-2 py-2 text-sm rounded-md text-gray-700 dark:text-gray-300
-                            hover:bg-menubg-light dark:hover:bg-menubg-dark">
+        hover:bg-menubg-light dark:hover:bg-menubg-dark">
                         Submenu 2
                         <svg :class="{ 'transform rotate-90': isSubMenuOpen('multi.sub2') }"
                             class="h-4 w-4 transition-transform duration-200" fill="none" stroke="currentColor"
@@ -115,38 +123,28 @@
                             <path d="M9 5l7 7-7 7" />
                         </svg>
                     </button>
-                    <div x-show="isSubMenuOpen('multi.sub2')" x-collapse class="pl-4 mt-1 space-y-1">
-                        <a href="#"
-                            class="block px-2 py-2 text-sm rounded-md text-gray-700 dark:text-gray-300 hover:bg-menubg-light dark:hover:bg-menubg-dark">
+
+                    <div
+                        x-show="isSubMenuOpen('multi.sub2') || '{{ request()->is('submenu2*') ? 'true' : 'false' }}' === 'true'"
+                        x-collapse class="pl-4 mt-1 space-y-1">
+
+                        <a href="{{ url('submenu1') }}"
+                            class="block px-2 py-2 text-sm rounded-md
+            {{ request()->is('submenu1') 
+                ? 'bg-active-light text-gray-900 dark:bg-active-dark dark:text-white font-semibold'
+                : 'text-gray-700 dark:text-gray-300 hover:bg-menubg-light dark:hover:bg-menubg-dark' }}">
                             Submenu 2-1
                         </a>
-                        <a href="#"
-                            class="block px-2 py-2 text-sm rounded-md text-gray-700 dark:text-gray-300 hover:bg-menubg-light dark:hover:bg-menubg-dark">
+
+                        <a href="{{ url('submenu2/2') }}"
+                            class="block px-2 py-2 text-sm rounded-md
+            {{ request()->is('submenu2/2') 
+                ? 'bg-active-light text-gray-900 dark:bg-active-dark dark:text-white font-semibold'
+                : 'text-gray-700 dark:text-gray-300 hover:bg-menubg-light dark:hover:bg-menubg-dark' }}">
                             Submenu 2-2
                         </a>
                     </div>
                 </div>
-
-                <!-- Submenu 3 -->
-                <div>
-                    <button @click="toggleSubMenu('multi.sub3')"
-                        class="w-full flex items-center justify-between px-2 py-2 text-sm rounded-md text-gray-700 dark:text-gray-300
-                            hover:bg-menubg-light dark:hover:bg-menubg-dark">
-                        Submenu 3
-                        <svg :class="{ 'transform rotate-90': isSubMenuOpen('multi.sub3') }"
-                            class="h-4 w-4 transition-transform duration-200" fill="none" stroke="currentColor"
-                            stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M9 5l7 7-7 7" />
-                        </svg>
-                    </button>
-                    <div x-show="isSubMenuOpen('multi.sub3')" x-collapse class="pl-4 mt-1 space-y-1">
-                        <a href="#"
-                            class="block px-2 py-2 text-sm rounded-md text-gray-700 dark:text-gray-300 hover:bg-menubg-light dark:hover:bg-menubg-dark">
-                            Submenu 3-1
-                        </a>
-                    </div>
-                </div>
-
             </div>
         </div>
         <!-- Authorization Menu -->

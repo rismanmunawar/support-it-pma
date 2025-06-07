@@ -24,7 +24,7 @@
             <div>
                 <label for="kategori" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Kategori</label>
                 <select name="kategori" id="kategori"
-                    class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 border-transparent focus:border-blue-500 focus:ring-blue-500 text-gray-800 dark:text-white">
+                    class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 border-transparent focus:border-blue-500 focus:ring-blue-500 text-gray-800 dark:text-white" require>
                     <option value="">-- Pilih Kategori --</option>
                     <option value="System" {{ old('kategori') == 'System' ? 'selected' : '' }}>System</option>
                     <option value="Monitoring" {{ old('kategori') == 'Monitoring' ? 'selected' : '' }}>Monitoring</option>

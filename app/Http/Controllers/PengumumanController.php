@@ -38,7 +38,7 @@ class PengumumanController extends Controller
         $request->validate([
             'judul' => 'required',
             'isi' => 'required',
-            'kategori' => 'nullable',
+            'kategori' => 'required',
             'gambar' => 'nullable|image|max:2048', // max 2MB
         ]);
 
@@ -68,8 +68,10 @@ class PengumumanController extends Controller
     public function update(Request $request, Pengumuman $pengumuman)
     {
         $request->validate([
-            'judul' => 'required',
-            'isi' => 'required',
+            'judul' => 'required|string|max:255',
+            'isi' => 'required|string',
+            'kategori' => 'required|string',
+            'gambar' => 'nullable|image|max:2048',
         ]);
 
         $pengumuman->update($request->only(['judul', 'isi', 'kategori']));

@@ -19,9 +19,16 @@
             </div>
 
             <div class="mb-4">
-                <label class="block mb-1 font-semibold text-gray-700 dark:text-gray-300">Kategori</label>
-                <input type="text" name="kategori" value="{{ old('kategori', $pengumuman->kategori) }}"
+                <label for="kategori" class="block mb-1 font-semibold text-gray-700 dark:text-gray-300">Kategori</label>
+                <select name="kategori" id="kategori"
                     class="w-full rounded border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring focus:ring-blue-400 py-3">
+                    <option value="System" {{ old('kategori', $pengumuman->kategori) == 'System' ? 'selected' : '' }}>System</option>
+                    <option value="Monitoring" {{ old('kategori', $pengumuman->kategori) == 'Monitoring' ? 'selected' : '' }}>Monitoring</option>
+                    <option value="Umum" {{ old('kategori', $pengumuman->kategori) == 'Umum' ? 'selected' : '' }}>Umum</option>
+                </select>
+                @error('kategori')
+                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                @enderror
             </div>
 
             <div class="mb-4">
