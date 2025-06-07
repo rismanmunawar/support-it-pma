@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Pengumuman;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class PengumumanController extends Controller
 {
@@ -13,7 +14,8 @@ class PengumumanController extends Controller
         $query = Pengumuman::with('user');
 
         if ($request->filled('search')) {
-            $query->where('judul', 'like', '%' . $request->search . '%');
+            $query->where('judul', 'like', '%' . $request->search . '%')
+                ->orWhere('isi', 'like', '%' . $request->search . '%');;
         }
 
         if ($request->filled('kategori')) {
@@ -37,7 +39,7 @@ class PengumumanController extends Controller
             'judul' => 'required',
             'isi' => 'required',
             'kategori' => 'nullable',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'gambar' => 'nullable|image|max:2048', // max 2MB
         ]);
 
         $gambarPath = null;
@@ -55,6 +57,7 @@ class PengumumanController extends Controller
 
         return redirect()->route('pengumuman.index')->with('success', 'Pengumuman berhasil dibuat.');
     }
+
 
 
     public function edit(Pengumuman $pengumuman)
@@ -76,7 +79,14 @@ class PengumumanController extends Controller
 
     public function destroy(Pengumuman $pengumuman)
     {
+        // Cek kalau ada gambar, hapus filenya dari storage
+        if ($pengumuman->gambar && Storage::disk('public')->exists($pengumuman->gambar)) {
+            Storage::disk('public')->delete($pengumuman->gambar);
+        }
+
+        // Hapus data pengumuman dari database
         $pengumuman->delete();
-        return redirect()->route('pengumuman.index')->with('success', 'Pengumuman dihapus.');
+
+        return redirect()->route('pengumuman.index')->with('success', 'Pengumuman dan gambar terkait berhasil dihapus.');
     }
 }

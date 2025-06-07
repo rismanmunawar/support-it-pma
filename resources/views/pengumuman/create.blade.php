@@ -2,7 +2,7 @@
     <div class="max-w-2xl mx-auto p-6">
         <h1 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">Tambah Pengumuman</h1>
 
-        <form method="POST" action="{{ route('pengumuman.store') }}" enctype="multipart/form-data" class="space-y-4">
+        <form action="{{ route('pengumuman.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div>
                 <label for="judul" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Judul</label>
@@ -10,8 +10,8 @@
                 @error('judul')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
             </div>
             <div>
-                <label for="gambar" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Capture / Gambar (opsional)</label>
-                <input type="file" name="gambar" id="gambar" class="mt-1 block w-full text-gray-800 dark:text-white">
+                <label for="gambar" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Upload Gambar (opsional)</label>
+                <input type="file" name="gambar" id="gambar" class="mt-1 block w-full text-gray-700 dark:text-gray-300" accept="image/*">
                 @error('gambar')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
             </div>
 
@@ -22,8 +22,14 @@
             </div>
 
             <div>
-                <label for="kategori" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Kategori (opsional)</label>
-                <input type="text" name="kategori" id="kategori" class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 border-transparent focus:border-blue-500 focus:ring-blue-500 text-gray-800 dark:text-white" value="{{ old('kategori') }}">
+                <label for="kategori" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Kategori</label>
+                <select name="kategori" id="kategori"
+                    class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 border-transparent focus:border-blue-500 focus:ring-blue-500 text-gray-800 dark:text-white">
+                    <option value="">-- Pilih Kategori --</option>
+                    <option value="System" {{ old('kategori') == 'System' ? 'selected' : '' }}>System</option>
+                    <option value="Monitoring" {{ old('kategori') == 'Monitoring' ? 'selected' : '' }}>Monitoring</option>
+                    <option value="Umum" {{ old('kategori') == 'Umum' ? 'selected' : '' }}>Umum</option>
+                </select>
             </div>
 
             <div class="flex justify-end">
