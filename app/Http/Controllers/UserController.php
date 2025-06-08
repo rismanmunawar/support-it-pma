@@ -9,25 +9,25 @@ use Illuminate\Validation\Rules;
 
 class UserController extends Controller
 {
-    // public function index()
-    // {
-    //     $users = User::all();
-    //     return view('users.index', compact('users'));
-    // }
     public function index(Request $request)
     {
-        $search = $request->input('search');
+        $query = $request->input('query');
+        $filter = $request->input('filter', 'name');
 
         $users = User::query()
-            ->when($search, function ($query, $search) {
-                return $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%")
-                    ->orWhere('branch', 'like', "%{$search}%")
-                    ->orWhere('nik', 'like', "%{$search}%")
-                    ->orWhere('role', 'like', "%{$search}%");
+            ->when($query, function ($q) use ($filter, $query) {
+                $q->where($filter, 'like', "%{$query}%");
             })
-            ->orderBy('name')
-            ->paginate(10);
+            ->paginate(10)
+            ->withQueryString();
+
+        if ($request->ajax()) {
+            return response()->json([
+                'table' => view('users.partials.table', compact('users'))->render(),
+                'pagination' => view('users.partials.pagination', compact('users'))->render(),
+                'info' => "Showing {$users->firstItem()} to {$users->lastItem()} of {$users->total()} entries"
+            ]);
+        }
 
         return view('users.index', compact('users'));
     }
