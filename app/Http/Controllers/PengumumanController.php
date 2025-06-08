@@ -11,22 +11,50 @@ class PengumumanController extends Controller
 {
     public function index(Request $request)
     {
+        session(['pengumuman_dilihat' => true]);
+        session()->save();
+
+        $user = Auth::user();
+
+        // Query awal untuk pencarian dan filter
         $query = Pengumuman::with('user');
 
         if ($request->filled('search')) {
-            $query->where('judul', 'like', '%' . $request->search . '%')
-                ->orWhere('isi', 'like', '%' . $request->search . '%');;
+            $query->where(function ($q) use ($request) {
+                $q->where('judul', 'like', '%' . $request->search . '%')
+                    ->orWhere('isi', 'like', '%' . $request->search . '%');
+            });
         }
 
         if ($request->filled('kategori')) {
             $query->where('kategori', $request->kategori);
         }
 
-        $pengumuman = $query->latest()->paginate(10);
+        // Ambil semua pengumuman (yang sesuai filter) untuk ditandai sebagai dibaca
+        $pengumumanList = $query->get();
+
+        foreach ($pengumumanList as $pengumuman) {
+            // Jika belum dibaca oleh user ini, tandai sebagai dibaca
+            if (!$pengumuman->dibacaOleh()->where('user_id', $user->id)->exists()) {
+                $pengumuman->dibacaOleh()->attach($user->id, ['read_at' => now()]);
+            }
+        }
+
+        // Hitung jumlah pengumuman yang belum dibaca (untuk icon bell)
+        $unreadCount = Pengumuman::whereDoesntHave('dibacaOleh', function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+        })->count();
+
+        // Ambil daftar kategori unik
         $kategoriList = Pengumuman::select('kategori')->distinct()->pluck('kategori');
 
-        return view('pengumuman.index', compact('pengumuman', 'kategoriList'));
+        // Urutkan berdasarkan tanggal terbaru dan paginate
+        $pengumuman = $query->latest()->paginate(10);
+
+        return view('pengumuman.index', compact('pengumuman', 'kategoriList', 'unreadCount'));
     }
+
+
 
     public function create()
     {
@@ -36,9 +64,9 @@ class PengumumanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'judul' => 'required',
-            'isi' => 'required',
-            'kategori' => 'required',
+            'judul' => 'required|string|max:255',
+            'isi' => 'required|string',
+            'kategori' => 'required|string|max:100',
             'gambar' => 'nullable|image|max:2048', // max 2MB
         ]);
 
@@ -58,8 +86,6 @@ class PengumumanController extends Controller
         return redirect()->route('pengumuman.index')->with('success', 'Pengumuman berhasil dibuat.');
     }
 
-
-
     public function edit(Pengumuman $pengumuman)
     {
         return view('pengumuman.edit', compact('pengumuman'));
@@ -70,23 +96,34 @@ class PengumumanController extends Controller
         $request->validate([
             'judul' => 'required|string|max:255',
             'isi' => 'required|string',
-            'kategori' => 'required|string',
+            'kategori' => 'required|string|max:100',
             'gambar' => 'nullable|image|max:2048',
         ]);
 
+        // Update data teks
         $pengumuman->update($request->only(['judul', 'isi', 'kategori']));
+
+        // Handle gambar jika ada upload baru
+        if ($request->hasFile('gambar')) {
+            // Hapus gambar lama jika ada
+            if ($pengumuman->gambar && Storage::disk('public')->exists($pengumuman->gambar)) {
+                Storage::disk('public')->delete($pengumuman->gambar);
+            }
+            // Simpan gambar baru
+            $gambarPath = $request->file('gambar')->store('pengumuman', 'public');
+            $pengumuman->update(['gambar' => $gambarPath]);
+        }
 
         return redirect()->route('pengumuman.index')->with('success', 'Pengumuman diperbarui.');
     }
 
     public function destroy(Pengumuman $pengumuman)
     {
-        // Cek kalau ada gambar, hapus filenya dari storage
+        // Hapus gambar jika ada
         if ($pengumuman->gambar && Storage::disk('public')->exists($pengumuman->gambar)) {
             Storage::disk('public')->delete($pengumuman->gambar);
         }
 
-        // Hapus data pengumuman dari database
         $pengumuman->delete();
 
         return redirect()->route('pengumuman.index')->with('success', 'Pengumuman dan gambar terkait berhasil dihapus.');

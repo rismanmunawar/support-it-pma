@@ -1,5 +1,4 @@
-<div x-data="{ sidebarOpen: window.innerWidth >= 768 }" @resize.window="sidebarOpen = window.innerWidth >= 768 ? true : false"
-    class="flex h-screen bg-gray-100 dark:bg-gray-900 relative">
+<div x-data="notif()" x-init="init()" class="flex h-screen bg-gray-100 dark:bg-gray-900 relative">
 
     <!-- Sidebar -->
     <nav x-show="sidebarOpen" x-transition:enter="transition transform duration-300"
@@ -31,30 +30,65 @@
                     </svg>
                 </button>
                 <h1 class="text-xl font-bold text-gray-800 dark:text-white">Dashboard</h1>
-
             </div>
 
             <!-- User Dropdown -->
             <div class="flex items-center ml-4 md:ml-6">
-                <!-- Notification Icon -->
+
+                <!-- Notification Icon dengan Alpine.js -->
+                <div class="relative mr-4" x-data="{ unreadCount: 0 }" x-init="
+                    fetchUnreadCount = () => {
+                        fetch('/notif/unread-count')
+                            .then(res => res.json())
+                            .then(data => unreadCount = data.count || 0)
+                            .catch(() => unreadCount = 0);
+                    };
+                    fetchUnreadCount();
+                    setInterval(fetchUnreadCount, 5000);
+                ">
+                    <a href="{{ route('pengumuman.index') }}">
+                        <button
+                            class="relative p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-500"
+                            aria-label="Notifications">
+                            <svg class="h-6 w-6 text-gray-700 dark:text-gray-200" fill="none" stroke="currentColor"
+                                stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                            </svg>
+
+                            <span x-show="unreadCount > 0" x-text="unreadCount"
+                                class="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-bold leading-none text-white bg-red-600 rounded-full transition-opacity duration-300"
+                                style="display: none;"></span>
+                        </button>
+                    </a>
+                </div>
+
+                <!-- Message Icon -->
                 <div class="relative mr-4">
-                    <button class="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-500" aria-label="Notifications">
-                        <svg class="h-6 w-6 text-gray-700 dark:text-gray-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                    <button
+                        class="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-500"
+                        aria-label="Messages">
+                        <svg class="h-6 w-6 text-gray-700 dark:text-gray-200" fill="none" stroke="currentColor"
+                            stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
-                        <span class="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white bg-red-600 rounded-full">3</span>
+                        <span
+                            class="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white bg-blue-600 rounded-full">5</span>
                     </button>
                 </div>
-                <!-- Tombol Toggle Dark Mode -->
+
+                <!-- Toggle Dark Mode -->
                 <button onclick="toggleDarkMode()" class="p-2 rounded text-black dark:text-white">
                     <span id="mode-icon">
-                        <svg id="sun-icon" class="h-6 w-6" style="display: none;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg id="sun-icon" class="h-6 w-6" style="display: none;" xmlns="http://www.w3.org/2000/svg"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 3v1m0 16v1m8.66-13.66l-.707.707M4.05 19.95l-.707-.707M21 12h1M2 12H1m16.95 4.95l-.707.707M4.05 4.05l-.707.707M12 5a7 7 0 100 14 7 7 0 000-14z" />
                         </svg>
-                        <svg id="moon-icon" class="h-6 w-6" style="display: none;" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+                        <svg id="moon-icon" class="h-6 w-6" style="display: none;" xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
                         </svg>
                     </span>
                 </button>
@@ -98,6 +132,24 @@
 </div>
 
 <script>
+    function toggleDarkMode() {
+        const html = document.documentElement;
+        const sunIcon = document.getElementById('sun-icon');
+        const moonIcon = document.getElementById('moon-icon');
+
+        if (html.classList.contains('dark')) {
+            html.classList.remove('dark');
+            localStorage.theme = 'light';
+            sunIcon.style.display = 'block';
+            moonIcon.style.display = 'none';
+        } else {
+            html.classList.add('dark');
+            localStorage.theme = 'dark';
+            sunIcon.style.display = 'none';
+            moonIcon.style.display = 'block';
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
         const html = document.documentElement;
         const sunIcon = document.getElementById('sun-icon');
@@ -116,22 +168,22 @@
             moonIcon.style.display = 'none';
         }
     });
+</script>
 
-    function toggleDarkMode() {
-        const html = document.documentElement;
-        const sunIcon = document.getElementById('sun-icon');
-        const moonIcon = document.getElementById('moon-icon');
-
-        if (html.classList.contains('dark')) {
-            html.classList.remove('dark');
-            localStorage.theme = 'light';
-            sunIcon.style.display = 'block';
-            moonIcon.style.display = 'none';
-        } else {
-            html.classList.add('dark');
-            localStorage.theme = 'dark';
-            sunIcon.style.display = 'none';
-            moonIcon.style.display = 'block';
+<script>
+    function notif() {
+        return {
+            sidebarOpen: window.innerWidth >= 768, // ⬅️ Tambahkan ini
+            init() {
+                // Bisa juga tambahin listener kalau mau dinamis waktu resize
+                window.addEventListener('resize', () => {
+                    if (window.innerWidth >= 768) {
+                        this.sidebarOpen = true;
+                    } else {
+                        this.sidebarOpen = false;
+                    }
+                });
+            }
         }
     }
 </script>

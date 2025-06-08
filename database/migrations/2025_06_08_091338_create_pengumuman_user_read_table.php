@@ -9,15 +9,16 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
-        Schema::create('pengumuman', function (Blueprint $table) {
+        Schema::create('pengumuman_user_read', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('pengumuman_id')->constrained('pengumuman')->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('judul');
-            $table->text('isi');
-            $table->string('kategori')->nullable();
+            $table->timestamp('read_at')->nullable();
             $table->timestamps();
+
+            $table->unique(['pengumuman_id', 'user_id']);
         });
     }
 
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pengumuman');
+        Schema::dropIfExists('pengumuman_user_read');
     }
 };

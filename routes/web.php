@@ -7,6 +7,10 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PengumumanController;
+use App\Http\Controllers\HomeController;
+use App\Http\Middleware\TandaiPengumumanDilihat;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Pengumuman;
 
 Route::get('/', function () {
     return view('welcome');
@@ -17,12 +21,12 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/users', [UserController::class, 'index'])->name('users.index');
-    Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
+    // User
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
@@ -31,19 +35,35 @@ Route::middleware('auth')->group(function () {
     Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
+    // FAQ & Menu
     Route::get('/faq', [FaqCOntroller::class, 'index'])->name('faq');
-
+    Route::get('/main', [FaqCOntroller::class, 'main'])->name('main');
     Route::get('/submenu1', [MenuController::class, 'submenu1'])->name('submenu1');
     Route::get('/submenu1_1', [MenuController::class, 'submenu1_1'])->name('submenu1_1');
-    // Route::get('/faq', [FaqController::class, 'index']);
-    Route::get('/main', [FaqCOntroller::class, 'main'])->name('main');
 
-    Route::resource('pengumuman', PengumumanController::class);
+    // Home (beranda setelah login)
+    Route::get('/', function () {
+        return view('welcome');
+    });
+
+    // Pengumuman
+    Route::middleware([TandaiPengumumanDilihat::class])->group(function () {
+        Route::resource('pengumuman', PengumumanController::class);
+    });
+
+    // Notifikasi unread count
+    Route::get('/notif/unread-count', function () {
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['count' => 0]);
+        }
+
+        $count = Pengumuman::whereDoesntHave('dibacaOleh', function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+        })->count();
+
+        return response()->json(['count' => $count]);
+    });
 });
-
-// Route::middleware(['auth', 'admin'])->group(function () {
-//     Route::resource('/users', UserController::class);
-// });
-
 
 require __DIR__ . '/auth.php';
