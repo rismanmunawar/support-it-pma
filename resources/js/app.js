@@ -4,6 +4,7 @@ import collapse from '@alpinejs/collapse'
 import { faqPage } from './faq';
 import './bootstrap';
 import '../css/app.css'; // pastikan baris ini ada
+
 window.faqPage = faqPage;
 
 

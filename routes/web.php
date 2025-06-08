@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PengumumanController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Middleware\TandaiPengumumanDilihat;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Pengumuman;
@@ -15,11 +16,7 @@ use App\Models\Pengumuman;
 Route::get('/', function () {
     return view('welcome');
 });
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
+Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 Route::middleware('auth')->group(function () {
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -42,9 +39,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/submenu1_1', [MenuController::class, 'submenu1_1'])->name('submenu1_1');
 
     // Home (beranda setelah login)
-    Route::get('/', function () {
-        return view('welcome');
-    });
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->middleware(['auth', 'verified'])->name('dashboard');
 
     // Pengumuman
     Route::middleware([TandaiPengumumanDilihat::class])->group(function () {
