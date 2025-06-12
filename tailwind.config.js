@@ -13,7 +13,7 @@ export default {
     extend: {
       colors: {
         sidebar: {
-          light: '#ffffff', // warna sidebar saat light
+          light: '#053442', // warna sidebar saat light
           dark: '#1f2937',  // gray-800 dark mode
         },
         menubg: {

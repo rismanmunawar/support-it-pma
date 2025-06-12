@@ -1,10 +1,13 @@
-import * as XLSX from 'xlsx';
-
-document.addEventListener('DOMContentLoaded', () => {
+window.initExcelMonitoring = function () {
     const input = document.getElementById('excelFile');
     const table = document.getElementById('excelTable');
     const thead = document.getElementById('tableHead');
     const tbody = document.getElementById('tableBody');
+
+        if (!input || !table || !thead || !tbody) {
+            return; // hilangkan warning
+        }
+
 
     input.addEventListener('change', (e) => {
         const file = e.target.files[0];
@@ -22,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const lastDateColIndex = header.length - 1;
             const dayCount = lastDateColIndex - firstDateColIndex + 1;
 
-            // Buat header tabel
             let headHtml = `<tr>
                 <th class="border p-2">Plant</th>
                 <th class="border p-2">Plant Name</th>`;
@@ -32,7 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
             headHtml += `<th class="border p-2 text-red-600">Jml ❌</th></tr>`;
             thead.innerHTML = headHtml;
 
-            // Proses data
             const rows = raw.slice(1).map((row) => {
                 const plant = row[0];
                 const name = row[1];
@@ -47,7 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return { plant, name, statuses, jml_x };
             }).filter(row => row.statuses.some(s => s === '❌' || s === '⚠️'));
 
-            // Buat body tabel
             let bodyHtml = '';
             rows.forEach((row) => {
                 bodyHtml += `<tr>
@@ -64,4 +64,4 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         reader.readAsBinaryString(file);
     });
-});
+};

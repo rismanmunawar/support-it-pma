@@ -9,13 +9,18 @@
 
 /* For Chrome, Safari and Opera */
 /* Hide scrollbar but still scrollable */
+
 .no-scrollbar::-webkit-scrollbar {
-  display: none;
+    height: 8px;
 }
-.no-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+.no-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(100, 116, 139, 0.5); /* abu2 soft */
+    border-radius: 4px;
 }
+.no-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
 
 
 

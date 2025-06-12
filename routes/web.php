@@ -43,11 +43,11 @@ Route::middleware('auth')->group(function () {
     // Route::get('/dashboard', function () {
     //     return view('dashboard');
     // })
-    Route::get('/dashboard', [ZndsuMonitoringController::class, 'index'])
+    Route::get('/dashboard', [HomeController::class, 'index'])
         ->middleware(['auth', 'verified'])
         ->name('dashboard');
-    Route::get('/monitoring', [ZndsuMonitoringController::class, 'index'])->name('dashboard');
-    Route::post('/monitoring/upload', [ZndsuMonitoringController::class, 'upload'])->name('monitoring.upload');
+    Route::get('/monitoring', [HomeController::class, 'index'])->name('dashboard');
+    Route::post('/monitoring/upload', [HomeController::class, 'upload'])->name('zndsu.upload');
 
     // Pengumuman
     Route::middleware([TandaiPengumumanDilihat::class])->group(function () {

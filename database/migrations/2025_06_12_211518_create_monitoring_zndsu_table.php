@@ -11,12 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('zndsu_monitorings', function (Blueprint $table) {
+        Schema::create('monitoring_zndsu', function (Blueprint $table) {
             $table->id();
             $table->string('plant');
             $table->string('name');
-            $table->json('statuses'); // tipe JSON
-            $table->integer('jml_x')->default(0); // jumlah 'fail'
+            $table->integer('jml_x')->nullable();
+
+            // Tambahkan kolom day_1 sampai day_31
+            for ($i = 1; $i <= 31; $i++) {
+                $table->string('day_' . $i)->nullable();
+            }
+
+            $table->timestamp('uploaded_at')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('zndsu_monitorings');
+        Schema::dropIfExists('monitoring_zndsu');
     }
 };

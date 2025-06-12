@@ -11,18 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('zndsu_monitorings', function (Blueprint $table) {
-            $table->json('status_headers')->nullable();
+        Schema::table('monitoring_zndsu', function (Blueprint $table) {
+            $table->timestamp('uploaded_at')->nullable()->after('jml_x');
         });
     }
 
     /**
      * Reverse the migrations.
      */
-    public function down()
+    public function down(): void
     {
-        Schema::table('zndsu_monitorings', function (Blueprint $table) {
-            $table->dropColumn('status_headers');
+        Schema::table('monitoring_zndsu', function (Blueprint $table) {
+            //
         });
     }
 };

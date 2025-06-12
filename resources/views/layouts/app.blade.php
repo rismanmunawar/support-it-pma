@@ -37,7 +37,9 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/js/theme-toggle.js"></script>
     <script src="/js/logout-toast.js"></script>
+    <script src="//unpkg.com/alpinejs" defer></script>
     @stack('scripts')
+
 </head>
 
 <body class="font-sans antialiased">
