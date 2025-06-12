@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PengumumanController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ZndsuMonitoringController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Middleware\TandaiPengumumanDilihat;
 use Illuminate\Support\Facades\Auth;
@@ -39,9 +40,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/submenu1_1', [MenuController::class, 'submenu1_1'])->name('submenu1_1');
 
     // Home (beranda setelah login)
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->middleware(['auth', 'verified'])->name('dashboard');
+    // Route::get('/dashboard', function () {
+    //     return view('dashboard');
+    // })
+    Route::get('/dashboard', [ZndsuMonitoringController::class, 'index'])
+        ->middleware(['auth', 'verified'])
+        ->name('dashboard');
+    Route::get('/monitoring', [ZndsuMonitoringController::class, 'index'])->name('dashboard');
+    Route::post('/monitoring/upload', [ZndsuMonitoringController::class, 'upload'])->name('monitoring.upload');
 
     // Pengumuman
     Route::middleware([TandaiPengumumanDilihat::class])->group(function () {
@@ -61,6 +67,8 @@ Route::middleware('auth')->group(function () {
 
         return response()->json(['count' => $count]);
     });
+
+    // Route::get('/monitoring', [ZndsuMonitoringController::class, 'index'])->name('monitoring.index');
 });
 
 require __DIR__ . '/auth.php';
